@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+venv/
+dist/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environment Variables
+.env
+.env.*
+!.env.example
+
+# Tools
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+.gemini/
+.specify/
+
+# Lockfiles (included in git usually, but for local sync we keep it unless specified otherwise)
+# uv.lock is recommended to be committed.
+
+# Video Agents specifics
+/tmp/
+media/

@@ -1,0 +1,19 @@
+[project]
+name = "video-agents"
+version = "0.1.0"
+description = "MCP Server for automated video and audio editing with AI"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pydantic>=2.0",
+    "faster-whisper>=1.2.0",
+    "silero-vad>=5.1.0",
+    "scenedetect[opencv-headless]>=0.6.4",
+    "ffmpeg-python>=0.2.0",
+    "fastmcp",
+    "pytest",
+    "torch>=2.4.0",
+]
+
+# CUDA indexing removed for CPU-only testing as requested by user.
+# For production GPU usage, refer to research.md.
