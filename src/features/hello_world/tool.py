@@ -1,6 +1,7 @@
 from fastmcp import FastMCP
-from .models import GreetingRequest, GreetingResponse
+from .models import GreetingRequest
 from .logic import generate_greeting
+
 
 def register_hello_world(mcp: FastMCP):
     @mcp.tool()
