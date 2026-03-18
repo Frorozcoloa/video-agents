@@ -10,4 +10,5 @@ register_hello_world(mcp)
 register_audio_extraction(mcp)
 
 if __name__ == "__main__":
-    mcp.run(transport="stdio")
+    print("Starting MCP server on http://localhost:8000")
+    mcp.run(transport="http")

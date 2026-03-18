@@ -2,6 +2,8 @@
 
 The current project has a basic FastMCP server with a "Hello World" feature. This design introduces the first media processing feature: high-quality audio extraction from video files using FFmpeg.
 
+**Update (March 2026):** The server transport has been switched from `stdio` to `http` (SSE) on port **8000** to facilitate external testing via Postman/Curl and provide a more robust interface for containerized deployments.
+
 ## Goals / Non-Goals
 
 **Goals:**

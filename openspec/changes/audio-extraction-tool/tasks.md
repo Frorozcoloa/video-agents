@@ -14,9 +14,8 @@
 - [x] 3.2 Implement the tool registration in `src/features/audio_extraction/tool.py`.
 - [x] 3.3 Register the `audio_extraction` feature in `src/server.py`.
 
-## 4. Testing and Validation
+## 5. Infrastructure and Deployment (HTTP Sync)
 
-- [x] 4.1 Create `tests/test_audio_extraction.py`.
-- [x] 4.2 Write unit tests for `generate_extraction_logic` (or similar) mocking the FFmpeg command generation.
-- [x] 4.3 Verify that the tool is correctly registered with the FastMCP server.
-- [x] 4.4 Perform a manual validation with a small sample video (if possible).
+- [x] 5.1 Set server transport to `http` (SSE) in `src/server.py`.
+- [x] 5.2 Configure Docker port mapping for port 8000.
+- [x] 5.3 Update `README.md` with Postman and Curl instructions for the new transport.

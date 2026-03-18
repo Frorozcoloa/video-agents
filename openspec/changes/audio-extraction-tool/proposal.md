@@ -8,6 +8,7 @@ This change implements the first technical tool of the Proof of Concept (POC) to
 - Integrate the `ffmpeg-python` library as the processing engine.
 - Configure FFmpeg to discard video streams using the `vn=None` parameter.
 - Implement high-quality MP3 encoding using the `libmp3lame` codec with a variable bitrate (VBR) setting of `q=2`.
+- **Server Transport Upgrade**: The server has been transitioned to `http` (SSE) transport on port **8000**, enabling remote connectivity and easier Docker integration.
 
 ## Capabilities
 
