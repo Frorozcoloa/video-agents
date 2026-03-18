@@ -1,10 +1,10 @@
 ## ADDED Requirements
 
 ### Requirement: Automated Trigger on Pull Requests
-The system SHALL automatically trigger a unit test workflow whenever a Pull Request is created or updated targeting the `master` branch from any branch starting with `feature/`.
+The system SHALL automatically trigger a unit test workflow whenever a Pull Request is created or updated targeting the `main` branch from any branch starting with `feature/`.
 
-#### Scenario: PR from feature branch to master
-- **WHEN** a Pull Request is opened from `feature/new-feature` to `master`
+#### Scenario: PR from feature branch to main
+- **WHEN** a Pull Request is opened from `feature/new-feature` to `main`
 - **THEN** the GitHub Actions workflow "Unit Tests" SHALL start execution.
 
 ### Requirement: Test Environment Setup

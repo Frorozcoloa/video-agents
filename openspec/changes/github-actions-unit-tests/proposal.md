@@ -1,11 +1,11 @@
 ## Why
 
-To maintain high code quality and prevent regressions, we need an automated CI/CD pipeline that runs unit tests whenever a Pull Request is created from a feature branch to the master branch. This ensures that only verified code is merged.
+To maintain high code quality and prevent regressions, we need an automated CI/CD pipeline that runs unit tests whenever a Pull Request is created from a feature branch to the main branch. This ensures that only verified code is merged.
 
 ## What Changes
 
 - Add a new GitHub Actions workflow file at `.github/workflows/unit-tests.yml`.
-- Configure the workflow to trigger on `pull_request` events targeting the `master` branch from `feature/*` branches.
+- Configure the workflow to trigger on `pull_request` events targeting the `main` branch from `feature/*` branches.
 - The workflow will install dependencies using `uv` and run `pytest`.
 
 ## Capabilities
