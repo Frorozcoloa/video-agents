@@ -18,3 +18,20 @@ schema: spec-driven
 #       - Always include a "Non-goals" section
 #     tasks:
 #       - Break tasks into chunks of max 2 hours
+
+context: |
+  Tech stack: Python 3.11, FastMCP, FFmpeg, Whisper, PySceneDetect, uv, Docker
+  Security: OAuth 2.1 authentication, Rate limiting, PII Tokenization, Error masking
+  Domain: AI-driven video editing pipeline
+
+rules:
+  mcp_tools:
+    - Strictly validate all inputs using Pydantic models.
+    - Execute long-running processes like FFmpeg asynchronously (async def) to avoid blocking the Event Loop.
+    - Always hide stack traces and internal errors so they do not leak to the LLM client.
+  dockerfile:
+    - Implement multi-stage builds to reduce the attack surface and image size.
+    - Use the `uv` package manager to ensure fast and deterministic dependency resolution.
+    - Externalize heavy model weights (like Whisper) into persistent volumes instead of baking them into the image.
+  tasks:
+    - Break tasks into modular proof-of-concept increments that can be tested in isolation.
