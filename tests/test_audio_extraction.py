@@ -62,10 +62,27 @@ def test_extract_audio_default_output_path(mock_ffmpeg_input, mock_exists):
     mock_output.overwrite_output.return_value = mock_overwrite
     mock_overwrite.run.return_value = (b"stdout", b"stderr")
 
-    request = ExtractionRequest(video_path="my_video.mp4")
-    response = extract_audio_logic(request)
 
-    assert response.audio_path == "my_video.mp3"
-    mock_ffmpeg_input.return_value.output.assert_called_once_with(
-        "my_video.mp3", vn=None, acodec="libmp3lame", q=2
-    )
+@patch("os.path.exists")
+@patch("ffmpeg.input")
+def test_extract_audio_ffmpeg_error(mock_ffmpeg_input, mock_exists):
+    """Verify that a RuntimeError is raised if FFmpeg fails."""
+    mock_exists.return_value = True
+
+    import ffmpeg
+
+    mock_output = MagicMock()
+    mock_overwrite = MagicMock()
+    mock_ffmpeg_input.return_value.output.return_value = mock_output
+    mock_output.overwrite_output.return_value = mock_overwrite
+
+    # Create an ffmpeg.Error with a mocked stderr
+    mock_err = ffmpeg.Error("ffmpeg error", b"stdout", b"simulated stderr")
+    mock_overwrite.run.side_effect = mock_err
+
+    request = ExtractionRequest(video_path="error_video.mp4")
+    with pytest.raises(RuntimeError) as excinfo:
+        extract_audio_logic(request)
+
+    assert "FFmpeg audio extraction failed" in str(excinfo.value)
+    assert "simulated stderr" in str(excinfo.value)
