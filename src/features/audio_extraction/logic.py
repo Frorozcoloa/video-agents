@@ -1,3 +1,5 @@
+"""Logic for the audio extraction feature."""
+
 import os
 import ffmpeg
 from .models import ExtractionRequest, ExtractionResponse
@@ -6,6 +8,12 @@ from .models import ExtractionRequest, ExtractionResponse
 def extract_audio_logic(request: ExtractionRequest) -> ExtractionResponse:
     """
     Extracts high-quality audio from a video file using FFmpeg.
+
+    Args:
+        request: ExtractionRequest object containing the video path and output audio path.
+
+    Returns:
+        ExtractionResponse object containing the audio path and success status.
     """
     if not os.path.exists(request.video_path):
         raise FileNotFoundError(f"Input video file not found: {request.video_path}")

@@ -1,3 +1,5 @@
+"""Tool for the audio extraction feature."""
+
 from fastmcp import FastMCP
 from .models import ExtractionRequest
 from .logic import extract_audio_logic
