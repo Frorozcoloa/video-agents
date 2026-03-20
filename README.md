@@ -9,17 +9,29 @@ MCP Server for automated video and audio editing with AI.
 - FFmpeg (for media processing)
 - Docker (optional)
 
-## Running the Server (HTTP Mode)
+## Connecting with Gemini CLI (HTTP/SSE)
 
-Por defecto, el servidor está configurado para correr en modo **HTTP** en el puerto **8000**. Esto permite conexiones externas (Postman, Curl, etc.) y es el estándar para `fastmcp`.
+The server is configured to run on **HTTP** (SSE) on port **8000**. To connect it to **Gemini CLI**, add the following configuration to your `~/.gemini/settings.json`:
 
-### Local con `uv`
+```json
+{
+  "mcpServers": {
+    "video-agents": {
+      "url": "http://localhost:8000/sse"
+    }
+  }
+}
+```
+
+### Running the Server
+
+Before connecting, you must have the server running:
 
 ```bash
 uv run src/server.py
 ```
 
-### Running with Docker
+## Running the Server with Docker
 
 #### 1. Build the image
 ```bash

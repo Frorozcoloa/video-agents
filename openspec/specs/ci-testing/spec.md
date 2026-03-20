@@ -1,26 +1,13 @@
-<<<<<<< HEAD
-## ADDED Requirements
-
-### Requirement: Automated Trigger on Commits and Pull Requests
-The system SHALL automatically trigger a unit test workflow whenever a commit is pushed to the `main` branch OR a Pull Request is created or updated targeting the `main` branch.
-
-#### Scenario: Commit pushed to main
-- **WHEN** a developer pushes a commit directly to the `main` branch
-- **THEN** the GitHub Actions workflow "Unit Tests" SHALL start execution.
-=======
 # Continuous Integration (CI) Testing Specification
 
 ## Requirements
 
 ### Requirement: Automated Trigger on Pull Requests
 The system SHALL automatically trigger a unit test workflow whenever a Pull Request is created or updated targeting the `main` branch from any branch starting with `feature/`.
->>>>>>> 86675dc (Update the functions and coverage)
 
 #### Scenario: PR from feature branch to main
 - **WHEN** a Pull Request is opened from `feature/new-feature` to `main`
 - **THEN** the GitHub Actions workflow "Unit Tests" SHALL start execution.
-<<<<<<< HEAD
-=======
 
 ### Requirement: Test Environment Setup
 The workflow SHALL set up a Python 3.12 environment and install all project dependencies using `uv` before running the tests.
@@ -51,4 +38,3 @@ The workflow SHALL calculate code coverage using `pytest-cov`, display the repor
 #### Scenario: Coverage 80% or above
 - **WHEN** the unit tests pass and the total code coverage is 80% or more
 - **THEN** the GitHub Action status SHALL be marked as successful.
->>>>>>> 86675dc (Update the functions and coverage)

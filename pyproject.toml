@@ -21,6 +21,9 @@ dev = [
     "pytest-cov>=7.0.0",
 ]
 
+[project.scripts]
+video-agents = "src.server:mcp.run"
+
 [tool.pytest.ini_options]
 pythonpath = ["src"]
 testpaths = ["tests"]
