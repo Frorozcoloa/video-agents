@@ -1,4 +1,4 @@
-/## ADDED Requirements
+## ADDED Requirements
 
 ### Requirement: VAD Pre-processing
 The system SHALL pre-process audio files using Silero-VAD to detect and remove silences and background noise before initiating transcription.
