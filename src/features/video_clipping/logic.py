@@ -2,7 +2,8 @@
 
 import os
 import ffmpeg
-from .models import ClippingRequest, ClippingResponse
+from .models import ClippingRequest, ClippingResponse, JumpCutRequest, JumpCutResponse
+from .utils import prepare_audio_for_vad, detect_speech, apply_ffmpeg_jump_cut
 
 
 def clip_video_logic(request: ClippingRequest) -> ClippingResponse:
@@ -71,3 +72,41 @@ def clip_video_logic(request: ClippingRequest) -> ClippingResponse:
         raise RuntimeError(f"Error en FFmpeg: {error_msg}")
     except Exception as e:
         raise RuntimeError(f"Error inesperado: {str(e)}")
+
+
+def process_jump_cut(request: JumpCutRequest) -> JumpCutResponse:
+    """
+    Main handler for the Jump Cut Vertical Slice.
+    Orchestrates audio extraction, VAD analysis, and FFmpeg filtering.
+
+    Args:
+        request: JumpCutRequest object containing the video path and audio path
+
+    Returns:
+        JumpCutResponse
+    """
+    if not os.path.exists(request.video_path):
+        raise FileNotFoundError(f"Archivo de video no encontrado: {request.video_path}")
+
+    if not os.path.exists(request.audio_path):
+        raise FileNotFoundError(f"Archivo de audio no encontrado: {request.audio_path}")
+
+    output_path = request.output_video_path
+    if not output_path:
+        base, ext = os.path.splitext(request.video_path)
+        output_path = f"{base}_jumpcut{ext}"
+
+    temp_audio = None
+    try:
+        temp_audio = prepare_audio_for_vad(request.audio_path)
+        speech_timestamps = detect_speech(temp_audio)
+        apply_ffmpeg_jump_cut(request.video_path, output_path, speech_timestamps)
+
+        return JumpCutResponse(
+            video_path=output_path, success=True, cut_count=len(speech_timestamps)
+        )
+    except Exception as e:
+        raise RuntimeError(f"Error procesando jump cut: {str(e)}")
+    finally:
+        if temp_audio and os.path.exists(temp_audio):
+            os.remove(temp_audio)

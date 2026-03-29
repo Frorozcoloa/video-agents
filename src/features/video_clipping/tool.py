@@ -2,8 +2,8 @@
 
 from fastmcp import FastMCP
 from typing import Literal
-from .models import ClippingRequest
-from .logic import clip_video_logic
+from .models import ClippingRequest, JumpCutRequest
+from .logic import clip_video_logic, process_jump_cut
 
 
 def register_video_clipping(mcp: FastMCP):
@@ -25,9 +25,6 @@ def register_video_clipping(mcp: FastMCP):
             output_path (str, optional): The desired output path for the clipped video.
             mode (Literal["fast", "exact"]): 'fast' for streamcopy (speed, keyframe-accurate),
                                              'exact' for re-encoding (frame-accurate).
-            progress (Any, optional): Progress reporting (ignored in sync mode).
-
-        Returns:
             str: The path to the clipped video file.
         """
         request = ClippingRequest(
@@ -38,4 +35,29 @@ def register_video_clipping(mcp: FastMCP):
             mode=mode,
         )
         response = clip_video_logic(request)
+        return response.video_path
+
+    @mcp.tool()
+    def jump_cut_video(
+        video_path: str,
+        audio_path: str,
+        output_path: str | None = None,
+    ) -> str:
+        """
+        Creates a jump cut video by automatically detecting and removing silences using VAD.
+
+        Args:
+            video_path (str): The path to the input video file.
+            audio_path (str): The path to the extracted audio file to use for silence detection.
+            output_path (str, optional): The desired output path.
+
+        Returns:
+            str: The path to the jump cut video file.
+        """
+        request = JumpCutRequest(
+            video_path=video_path,
+            audio_path=audio_path,
+            output_video_path=output_path,
+        )
+        response = process_jump_cut(request)
         return response.video_path
