@@ -1,12 +1,11 @@
 """Logic for the audio transcription feature."""
 
-from typing import List, Dict, Any
 from faster_whisper import WhisperModel
+from toon_format import encode
+from functools import lru_cache
 
-# Cache models to avoid reloading on every request
-_WHISPER_MODELS = {}
 
-
+@lru_cache(maxsize=None)
 def get_whisper_model(model_size: str = "base") -> WhisperModel:
     """Load Whisper model
     Args:
@@ -14,20 +13,18 @@ def get_whisper_model(model_size: str = "base") -> WhisperModel:
     Returns:
         WhisperModel: Whisper model
     """
-    global _WHISPER_MODELS
-    if model_size not in _WHISPER_MODELS:
-        # CTranslate2 / faster-whisper logic using CPU and int8 for efficiency
-        _WHISPER_MODELS[model_size] = WhisperModel(
-            model_size, device="cpu", compute_type="int8"
-        )
-    return _WHISPER_MODELS[model_size]
+    # CTranslate2 / faster-whisper logic using CPU and int8 for efficiency
+    return WhisperModel(model_size, device="cpu", compute_type="int8")
 
 
 def transcribe_audio_logic(
-    audio_path: str, model_size: str = "base", min_silence_duration_ms: int = 2000
-) -> List[Dict[str, Any]]:
+    audio_path: str,
+    model_size: str = "base",
+    min_silence_duration_ms: int = 2000,
+) -> str:
     """
-    Task 3.1-3.3: Faster-whisper transcription with word timestamps and VAD filter.
+    Transcribe audio with Faster-whisper, word timestamps and VAD filter.
+    Returns the transcription in TOON (Token-Oriented Object Notation) format.
 
     Args:
         audio_path: Path to the audio file.
@@ -35,12 +32,10 @@ def transcribe_audio_logic(
         min_silence_duration_ms: Minimum duration of silence to consider as a segment boundary.
 
     Returns:
-        List[Dict[str, Any]]: List of transcribed segments.
+        str: Transcription in TOON format.
     """
     model = get_whisper_model(model_size)
-
-    # Using the optimized vad_filter=True within transcribe for best alignment
-    segments, _ = model.transcribe(
+    segments_gen, info = model.transcribe(
         audio_path,
         beam_size=5,
         word_timestamps=True,
@@ -49,23 +44,25 @@ def transcribe_audio_logic(
     )
 
     results = []
-    for segment in segments:
+    for segment in segments_gen:
         if segment.words:
             for word in segment.words:
                 results.append(
                     {
-                        "texto": word.word.strip(),
-                        "tiempo_inicio": int(word.start * 1000),
-                        "tiempo_fin": int(word.end * 1000),
+                        "text": word.word.strip(),
+                        "start": int(word.start * 1000),
+                        "end": int(word.end * 1000),
                     }
                 )
         else:
             # Fallback to segment if word timestamps are unavailable
             results.append(
                 {
-                    "texto": segment.text.strip(),
-                    "tiempo_inicio": int(segment.start * 1000),
-                    "tiempo_fin": int(segment.end * 1000),
+                    "text": segment.text.strip(),
+                    "start": int(segment.start * 1000),
+                    "end": int(segment.end * 1000),
                 }
             )
-    return results
+
+    # Return encoded TOON string
+    return encode({"transcription": results})

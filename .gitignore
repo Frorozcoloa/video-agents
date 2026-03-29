@@ -30,3 +30,4 @@ Thumbs.db
 # Video Agents specifics
 /tmp/
 media/
+.agent/

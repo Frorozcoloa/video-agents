@@ -23,9 +23,9 @@ def register_video_clipping(mcp: FastMCP):
             start_time (int): Start timestamp in milliseconds (e.g., 10500 for 10.5s).
             end_time (int): End timestamp in milliseconds (e.g., 20000 for 20.0s).
             output_path (str, optional): The desired output path for the clipped video.
-                                         If not provided, it will be generated based on the video path and mode.
             mode (Literal["fast", "exact"]): 'fast' for streamcopy (speed, keyframe-accurate),
                                              'exact' for re-encoding (frame-accurate).
+            progress (Any, optional): Progress reporting (ignored in sync mode).
 
         Returns:
             str: The path to the clipped video file.

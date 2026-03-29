@@ -10,7 +10,8 @@ dependencies = [
     "silero-vad>=5.1.0",
     "scenedetect[opencv-headless]>=0.6.4",
     "ffmpeg-python>=0.2.0",
-    "fastmcp",
+    "fastmcp[tasks]",
+    "toon-format @ git+https://github.com/toon-format/toon-python.git",
     "pytest",
     "torch>=2.4.0",
     "onnxruntime>=1.24.3",
@@ -18,6 +19,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "pre-commit>=4.5.1",
     "pytest-cov>=7.0.0",
 ]
 

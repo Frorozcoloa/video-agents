@@ -14,7 +14,7 @@ def register_audio_extraction(mcp: FastMCP):
         Args:
             video_path (str): The path to the input video file.
             output_path (str, optional): The desired output path for the audio.
-                                         If not provided, it will use the video's base name with .mp3 extension.
+            progress (Any, optional): Progress reporting (ignored in sync mode).
 
         Returns:
             str: The path to the extracted audio file.

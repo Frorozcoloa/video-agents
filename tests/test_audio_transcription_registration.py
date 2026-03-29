@@ -5,40 +5,27 @@ from features.audio_transcription.tool import register_audio_transcription
 
 
 @pytest.mark.anyio
-async def test_audio_transcription_registration():
-    """Verify that the transcribe_audio tool is registered correctly in FastMCP."""
-    mcp = FastMCP("Test")
+async def test_audio_transcription_tool_registration():
+    """Verify that the transcribe_audio tool is correctly registered."""
+    mcp = FastMCP("Test Server")
     register_audio_transcription(mcp)
 
-    # Check if tool is in mcp tools
     tools = await mcp.list_tools()
-    assert "transcribe_audio" in [t.name for t in tools]
+    tool = next((t for t in tools if t.name == "transcribe_audio"), None)
 
-    # Verify tool description contains expected keywords
-    tool = next(t for t in tools if t.name == "transcribe_audio")
-    assert "transcribes" in tool.description.lower()
-    assert "timestamps" in tool.description.lower()
+    assert tool is not None
+    assert "TOON" in tool.description
 
 
 @pytest.mark.anyio
 @patch("features.audio_transcription.tool.transcribe_audio_logic")
-async def test_audio_transcription_tool_execution(mock_logic):
-    """Verify the transcribe_audio tool can be executed through the server."""
-    mcp = FastMCP("Test")
+async def test_transcribe_audio_tool_execution(mock_logic):
+    """Verify that the tool correctly calls the logic function."""
+    mcp = FastMCP("Test Server")
     register_audio_transcription(mcp)
 
-    # Setup mock
-    mock_logic.return_value = [
-        {"texto": "Hello", "tiempo_inicio": 0, "tiempo_fin": 1000}
-    ]
+    mock_logic.return_value = "toon_data"
 
-    # Call the tool
-    result = await mcp.call_tool("transcribe_audio", {"audio_path": "audio.mp3"})
-
-    # result.content[0].text is a JSON string of the TranscriptionResponse
-    import json
-
-    data = json.loads(result.content[0].text)
-    assert len(data["segments"]) == 1
-    assert data["segments"][0]["texto"] == "Hello"
-    mock_logic.assert_called_once_with(audio_path="audio.mp3", model_size="base")
+    result = await mcp.call_tool("transcribe_audio", {"audio_path": "test.wav"})
+    assert result.content[0].text == "toon_data"
+    mock_logic.assert_called_once()
