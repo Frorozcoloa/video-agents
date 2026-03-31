@@ -42,3 +42,36 @@ class ClippingResponse(BaseModel):
 
     video_path: str = Field(..., description="Path to the clipped video file.")
     success: bool = Field(True, description="Indicates if the clipping was successful.")
+
+
+class JumpCutRequest(BaseModel):
+    """
+    Request model for the jump cut feature.
+
+    video_path: Path to the input video file.
+    audio_path: Path to the input audio file used for silence detection.
+    output_video_path: Optional path for the output video file.
+    """
+
+    video_path: str = Field(..., description="Path to the input video file.")
+    audio_path: str = Field(
+        ..., description="Path to the input audio file (e.g., extracted .mp3 or .wav)."
+    )
+    output_video_path: str | None = Field(
+        None,
+        description="Optional path for the output video file.",
+    )
+
+
+class JumpCutResponse(BaseModel):
+    """
+    Response model for the jump cut feature.
+
+    video_path: Path to the output video file.
+    success: Indicates if the process was successful.
+    cut_count: Number of silences/cuts processed.
+    """
+
+    video_path: str = Field(..., description="Path to the output jump cut video file.")
+    success: bool = Field(True, description="Indicates if the jump cut was successful.")
+    cut_count: int = Field(0, description="Number of active voice segments extracted.")

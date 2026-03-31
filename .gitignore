@@ -31,3 +31,5 @@ Thumbs.db
 /tmp/
 media/
 .agent/
+.claude
+.opencode
