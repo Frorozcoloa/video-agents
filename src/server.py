@@ -32,6 +32,7 @@ register_broll_overlay(mcp)
 
 
 def main() -> None:
+    """Run the MCP server."""
     logger.info("Transport : %s", TRANSPORT)
     logger.info("Host      : %s", HOST)
     logger.info("Port      : %d", PORT)
