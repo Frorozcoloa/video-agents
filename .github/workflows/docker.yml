@@ -51,14 +51,18 @@ jobs:
       - name: Verify HTTP endpoint responds
         run: |
           # FastMCP HTTP transport serves at /mcp — any non-000 response confirms the server is alive
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://localhost:8000/mcp || true)
-          echo "HTTP endpoint status: $STATUS"
-          if [ "$STATUS" = "000" ]; then
-            echo "No response from server."
-            docker logs video-agents-test
-            exit 1
-          fi
-          echo "Server responded with HTTP $STATUS — container is healthy."
+          for i in $(seq 1 10); do
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://127.0.0.1:8000/mcp || true)
+            echo "Attempt $i — HTTP endpoint status: $STATUS"
+            if [ "$STATUS" != "000" ]; then
+              echo "Server responded with HTTP $STATUS — container is healthy."
+              exit 0
+            fi
+            sleep 2
+          done
+          echo "No response from server after 10 attempts."
+          docker logs video-agents-test
+          exit 1
 
       - name: Show server logs
         if: always()
