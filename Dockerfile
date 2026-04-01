@@ -1,7 +1,8 @@
 # Use Python slim image for the build stage
 FROM python:3.12-slim AS builder
 
-# Install uv
+# Install uv and git (needed for git+ dependencies like toon-format)
+RUN apt-get update && apt-get install -y --no-install-recommends git && rm -rf /var/lib/apt/lists/*
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 
 # Set working directory
@@ -26,19 +27,22 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /app
 
-# Copy the virtual environment from the builder stage
+# Copy uv and the virtual environment from the builder stage
+COPY --from=builder /bin/uv /bin/uv
 COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /app/pyproject.toml /app/uv.lock ./
 
 # Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
+ENV FASTMCP_CHECK_FOR_UPDATES=off
 
 # Copy source code
 COPY src/ /app/src/
 
 # Healthcheck to verify the server process is alive
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD pgrep -f "python src/server.py" || exit 1
+    CMD pgrep -f "fastmcp" || exit 1
 
 # Default command
-ENTRYPOINT ["python", "src/server.py"]
+ENTRYPOINT ["uv", "run", "fastmcp", "run", "src/server.py", "--transport", "http", "--host", "0.0.0.0", "--port", "8000"]
