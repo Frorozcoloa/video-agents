@@ -48,12 +48,11 @@ jobs:
           docker logs video-agents-test
           exit 1
 
-      - name: Verify SSE endpoint responds
+      - name: Verify HTTP endpoint responds
         run: |
-          # SSE connections are long-lived; just verify the server replies with HTTP headers
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://localhost:8000/sse || true)
-          echo "SSE endpoint status: $STATUS"
-          # 200 (SSE streaming) or 405/404 both confirm the server is alive
+          # FastMCP HTTP transport serves at /mcp — any non-000 response confirms the server is alive
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 http://localhost:8000/mcp || true)
+          echo "HTTP endpoint status: $STATUS"
           if [ "$STATUS" = "000" ]; then
             echo "No response from server."
             docker logs video-agents-test
