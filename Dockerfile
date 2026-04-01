@@ -27,8 +27,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 # Set working directory
 WORKDIR /app
 
-# Copy the virtual environment from the builder stage
+# Copy uv and the virtual environment from the builder stage
+COPY --from=builder /bin/uv /bin/uv
 COPY --from=builder /app/.venv /app/.venv
+COPY --from=builder /app/pyproject.toml /app/uv.lock ./
 
 # Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"
@@ -39,7 +41,7 @@ COPY src/ /app/src/
 
 # Healthcheck to verify the server process is alive
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD pgrep -f "python src/server.py" || exit 1
+    CMD pgrep -f "fastmcp" || exit 1
 
 # Default command
-ENTRYPOINT ["python", "src/server.py"]
+ENTRYPOINT ["uv", "run", "fastmcp", "run", "src/server.py"]
