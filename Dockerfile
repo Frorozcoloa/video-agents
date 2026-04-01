@@ -35,6 +35,7 @@ COPY --from=builder /app/pyproject.toml /app/uv.lock ./
 # Set environment variables
 ENV PATH="/app/.venv/bin:$PATH"
 ENV PYTHONUNBUFFERED=1
+ENV FASTMCP_CHECK_FOR_UPDATES=off
 
 # Copy source code
 COPY src/ /app/src/
@@ -44,4 +45,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD pgrep -f "fastmcp" || exit 1
 
 # Default command
-ENTRYPOINT ["uv", "run", "fastmcp", "run", "src/server.py"]
+ENTRYPOINT ["uv", "run", "fastmcp", "run", "src/server.py", "--transport", "http", "--host", "0.0.0.0", "--port", "8000"]
