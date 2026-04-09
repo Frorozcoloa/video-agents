@@ -11,6 +11,8 @@ from features.audio_transcription.tool import register_audio_transcription
 from features.video_clipping.tool import register_video_clipping
 from features.scene_detection.tool import register_scene_detection
 from features.broll_overlay.tool import register_broll_overlay
+from features.audio_ducking.tool import register_audio_ducking
+from features.mix_audio_segments.tool import register_mix_audio_segments
 
 HOST = "0.0.0.0"
 PORT = 8000
@@ -29,6 +31,8 @@ register_audio_transcription(mcp)
 register_video_clipping(mcp)
 register_scene_detection(mcp)
 register_broll_overlay(mcp)
+register_audio_ducking(mcp)
+register_mix_audio_segments(mcp)
 
 
 def main() -> None:
